@@ -5,9 +5,12 @@
     ".eslintignore": "ignore"
   },
 
-  "javascript.validate.enable": false,
-  "javascript.format.enable": false,
-  "typescript.format.enable": false,
+  "javascript.validate.enable": true,
+  "javascript.format.enable": true,
+  "typescript.format.enable": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
 
   "search.exclude": {
     ".git": true,
