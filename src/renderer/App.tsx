@@ -3,7 +3,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import { Route, Routes, MemoryRouter, useLocation } from 'react-router-dom';
 
-import SideBar from './sidebar';
+import SideBar from '../components/sidebar';
 
 function Content() {
   const location = useLocation();
@@ -69,7 +69,7 @@ function Content2() {
   );
 }
 
-export default function ResponsiveDrawer() {
+export default function App() {
   return (
     <MemoryRouter>
       <Box sx={{ display: 'flex' }}>
@@ -77,8 +77,9 @@ export default function ResponsiveDrawer() {
         <SideBar />
         <Box component="main" sx={{ flexGrow: 1 }}>
           <Routes>
-            <Route path="/drafts" element={<Content />} />
+            <Route path="/" element={<Content2 />} />
             <Route path="/inbox" element={<Content2 />} />
+            <Route path="/drafts" element={<Content />} />
             <Route path="*" element={<Content />} />
           </Routes>
         </Box>
