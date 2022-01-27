@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
@@ -8,10 +9,12 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DraftsIcon from '@mui/icons-material/Drafts';
+import { Button, Typography } from '@mui/material';
 import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
 } from 'react-router-dom';
+import LoginModal from './login_modal';
 
 const drawerWidth = 240;
 
@@ -52,27 +55,15 @@ ListItemLink.defaultProps = {
   icon: null,
 };
 
-const drawer = (
-  <div>
-    <List>
-      <ListItemLink to="/inbox" primary="Inbox" icon={<InboxIcon />} />
-      <ListItemLink to="/drafts" primary="Drafts" icon={<DraftsIcon />} />
-    </List>
-    <Divider />
-    <List>
-      <ListItemLink to="/trash" primary="Trash" />
-      <ListItemLink to="/spam" primary="Spam" />
-    </List>
-  </div>
-);
-
 export default function SideBar() {
+  const [isOpen, setOpen] = React.useState(false);
   return (
     <Box
       component="nav"
       sx={{ width: drawerWidth, flexShrink: 0 }}
       aria-label="mailbox folders"
     >
+      <LoginModal isOpen={isOpen} setOpen={setOpen} />
       <Drawer
         variant="permanent"
         sx={{
@@ -83,7 +74,34 @@ export default function SideBar() {
         }}
         open
       >
-        {drawer}
+        <div>
+          <Button
+            variant="text"
+            color="inherit"
+            onClick={() => setOpen(true)}
+            sx={{
+              display: 'flex',
+              p: 1,
+              width: '100%',
+              justifyContent: 'flex-start',
+            }}
+          >
+            <Avatar alt="Remy Sharp" src="" />
+            <Box sx={{ pl: 1, display: 'flex', alignItems: 'center' }}>
+              <Typography variant="body1">点击登录</Typography>
+            </Box>
+          </Button>
+          <Divider />
+          <List>
+            <ListItemLink to="/inbox" primary="Inbox" icon={<InboxIcon />} />
+            <ListItemLink to="/drafts" primary="Drafts" icon={<DraftsIcon />} />
+          </List>
+          <Divider />
+          <List>
+            <ListItemLink to="/trash" primary="Trash" />
+            <ListItemLink to="/spam" primary="Spam" />
+          </List>
+        </div>
       </Drawer>
     </Box>
   );
