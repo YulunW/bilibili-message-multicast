@@ -14,6 +14,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
+import { upsertKeyValue, deleteKey } from './mainHelper';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -80,6 +81,27 @@ const createWindow = async () => {
       preload: path.join(__dirname, 'preload.js'),
     },
   });
+
+  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
+    { urls: ['*://*.bilibili.com/*'] },
+    (details, callback) => {
+      const { requestHeaders } = details;
+      deleteKey(requestHeaders, 'Origin');
+      deleteKey(requestHeaders, 'Referer');
+      callback({ requestHeaders });
+    }
+  );
+
+  mainWindow.webContents.session.webRequest.onHeadersReceived(
+    (details, callback) => {
+      const { responseHeaders } = details;
+      if (responseHeaders !== undefined) {
+        upsertKeyValue(responseHeaders, 'Access-Control-Allow-Origin', ['*']);
+        upsertKeyValue(responseHeaders, 'Access-Control-Allow-Headers', ['*']);
+      }
+      callback({ responseHeaders });
+    }
+  );
 
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
