@@ -14,7 +14,7 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import { upsertKeyValue, deleteKey } from './mainHelper';
+import { appendKeyValue, deleteKey } from './mainHelper';
 import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
@@ -78,6 +78,7 @@ const createWindow = async () => {
     height: 728,
     icon: getAssetPath('icon.png'),
     webPreferences: {
+      webSecurity: false,
       preload: path.join(__dirname, 'preload.js'),
     },
   });
@@ -96,8 +97,21 @@ const createWindow = async () => {
     (details, callback) => {
       const { responseHeaders } = details;
       if (responseHeaders !== undefined) {
-        upsertKeyValue(responseHeaders, 'Access-Control-Allow-Origin', ['*']);
-        upsertKeyValue(responseHeaders, 'Access-Control-Allow-Headers', ['*']);
+        // upsertKeyValue(responseHeaders, 'Access-Control-Allow-Credentials', [
+        //   'true',
+        // ]);
+        // upsertKeyValue(responseHeaders, 'Access-Control-Allow-Origin', ['*']);
+        // upsertKeyValue(responseHeaders, 'Access-Control-Allow-Headers', ['*']);
+        appendKeyValue(
+          responseHeaders,
+          'Set-Cookie',
+          '; SameSite=None; Secure'
+        );
+        appendKeyValue(
+          responseHeaders,
+          'set-cookie',
+          '; SameSite=None; Secure'
+        );
       }
       callback({ responseHeaders });
     }
