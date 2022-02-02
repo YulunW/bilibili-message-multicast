@@ -2,6 +2,8 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import { Route, Routes, MemoryRouter, useLocation } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from '../state/store';
 
 import SideBar from '../components/sidebar';
 
@@ -71,19 +73,22 @@ function Content2() {
 
 export default function App() {
   return (
-    <MemoryRouter>
-      <Box sx={{ display: 'flex' }}>
-        <CssBaseline />
-        <SideBar />
-        <Box component="main" sx={{ flexGrow: 1 }}>
-          <Routes>
-            <Route path="/" element={<Content2 />} />
-            <Route path="/inbox" element={<Content2 />} />
-            <Route path="/drafts" element={<Content />} />
-            <Route path="*" element={<Content />} />
-          </Routes>
+    <Provider store={store}>
+      <MemoryRouter>
+        <Box sx={{ display: 'flex' }}>
+          <CssBaseline />
+          <SideBar />
+          <Box component="main" sx={{ flexGrow: 1 }}>
+            <Routes>
+              <Route path="/" element={<Content2 />} />
+              <Route path="/index.html" element={<Content2 />} />
+              <Route path="/inbox" element={<Content2 />} />
+              <Route path="/drafts" element={<Content />} />
+              <Route path="*" element={<Content />} />
+            </Routes>
+          </Box>
         </Box>
-      </Box>
-    </MemoryRouter>
+      </MemoryRouter>
+    </Provider>
   );
 }
