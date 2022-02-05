@@ -14,6 +14,8 @@ import {
   Link as RouterLink,
   LinkProps as RouterLinkProps,
 } from 'react-router-dom';
+import { useAppDispatch } from 'state/hooks';
+import { setTrack } from 'state/loginInfoSlice';
 import LoginModal from './login_modal';
 
 interface ListItemLinkProps {
@@ -60,6 +62,8 @@ interface SideBarProps {
 export default function SideBar(props: SideBarProps) {
   const { drawerWidth } = props;
   const [isOpen, setOpen] = React.useState(false);
+  const dispatch = useAppDispatch();
+
   return (
     <Box
       component="nav"
@@ -81,7 +85,10 @@ export default function SideBar(props: SideBarProps) {
           <Button
             variant="text"
             color="inherit"
-            onClick={() => setOpen(true)}
+            onClick={() => {
+              dispatch(setTrack(true));
+              setOpen(true);
+            }}
             sx={{
               display: 'flex',
               p: 1,

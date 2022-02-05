@@ -8,7 +8,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
-import { retrieveQRCode } from '../state/loginInfoSlice';
+import { retrieveQRCode, setTrack } from '../state/loginInfoSlice';
 import { QRCODE_CONFIRM_SITE } from '../helpers/constants';
 
 import { LoginStatus } from '../types/loginStatus';
@@ -19,14 +19,18 @@ interface LoginProps {
 }
 export default function LoginModal(props: LoginProps) {
   const { isOpen, setOpen } = props;
-  const loginInfo = useAppSelector((state) => state.loginInfo);
+  const status = useAppSelector((state) => state.loginInfo.status);
+  const expireTime = useAppSelector((state) => state.loginInfo.expireTime);
+  const oauthKey = useAppSelector((state) => state.loginInfo.oauthKey);
   const dispatch = useAppDispatch();
 
   if (!isOpen) return <div />;
-  if (loginInfo.status === LoginStatus.LOGGED_IN) setOpen(false);
-  else if (
-    loginInfo.expireTime < new Date().getTime() &&
-    loginInfo.status !== LoginStatus.LOADING
+  if (status === LoginStatus.LOGGED_IN) {
+    dispatch(setTrack(false));
+    setOpen(false);
+  } else if (
+    expireTime < new Date().getTime() &&
+    status !== LoginStatus.LOADING
   ) {
     dispatch(retrieveQRCode);
   }
@@ -34,7 +38,10 @@ export default function LoginModal(props: LoginProps) {
   return (
     <Dialog
       open={isOpen}
-      onClose={() => setOpen(false)}
+      onClose={() => {
+        dispatch(setTrack(false));
+        setOpen(false);
+      }}
       aria-labelledby="login-modal"
       aria-describedby="login-using-qr-code"
     >
@@ -44,10 +51,8 @@ export default function LoginModal(props: LoginProps) {
       <DialogContent
         sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
       >
-        {loginInfo.expireTime >= new Date().getTime() ? (
-          <QRCode
-            value={`${QRCODE_CONFIRM_SITE}?oauthKey=${loginInfo.oauthKey}`}
-          />
+        {expireTime >= new Date().getTime() ? (
+          <QRCode value={`${QRCODE_CONFIRM_SITE}?oauthKey=${oauthKey}`} />
         ) : (
           <div />
         )}
