@@ -1,7 +1,13 @@
 import produce from 'immer';
+import { QRConfirmFail, QRConfirmSuccess } from 'types/qrConfirm';
+import { UserCookies, UserCookiesFromQuery } from 'types/userInfo';
 import { deepFreeze } from './object';
 import { bilibiliAPI, USER_AGENT } from './constants';
-import { assertIsQRCodeResponse } from './typePredicates';
+import {
+  assertIsQRCodeResponse,
+  isQRConfirmFail,
+  isQRConfirmSuccess,
+} from './typePredicates';
 
 const GET_OPTION: Readonly<RequestInit> = deepFreeze({
   credentials: 'include',
@@ -25,7 +31,9 @@ export const getQRCode = async (): Promise<string> => {
   return response.data.oauthKey;
 };
 
-export const QRCodeLogin = async (oauthKey: string): Promise<string> => {
+export const QRCodeLogin = async (
+  oauthKey: string
+): Promise<QRConfirmSuccess | QRConfirmFail> => {
   const response = await (
     await fetch(
       bilibiliAPI.QRCODE_FINAL_LOGIN,
@@ -34,7 +42,23 @@ export const QRCodeLogin = async (oauthKey: string): Promise<string> => {
       })
     )
   ).json();
-  return response.data;
+  if (!(isQRConfirmFail(response) || isQRConfirmSuccess(response))) {
+    throw new Error('Invalid type for QR Code Login');
+  }
+  return response;
+};
+
+export const convertCookie = (
+  cookieText: UserCookiesFromQuery
+): UserCookies => {
+  const setDate = new Date();
+  setDate.setSeconds(setDate.getSeconds() + parseInt(cookieText.Expires, 10));
+  return {
+    DedeUserID: parseInt(cookieText.DedeUserID, 10),
+    DedeUserID__ckMd5: cookieText.DedeUserID__ckMd5,
+    Expires: new Date().getTime() + parseInt(cookieText.Expires, 10) * 1000,
+    bili_jct: cookieText.bili_jct,
+  };
 };
 
 export const dummy = 123;
