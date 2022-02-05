@@ -1,4 +1,3 @@
-/* eslint-disable */
 import type { LoginStatus } from '../types/loginStatus';
 import type {
   QRConfirmSuccess,
@@ -6,9 +5,13 @@ import type {
   QRFailReason,
 } from '../types/qrConfirm';
 import type { QRCodeResponseData, QRCodeResponse } from '../types/qrResponse';
+import type { UserCookiesFromQuery, UserCookies } from '../types/userInfo';
 
 const isNumber = (value: unknown): value is number => typeof value === 'number';
 const isString = (value: unknown): value is string => typeof value === 'string';
+const isDate = (value: unknown): value is Date =>
+  value instanceof Date ||
+  Object.prototype.toString.call(value) === '[Object Date]';
 const isUnion =
   (unionChecks: ((value: unknown) => boolean)[]) =>
   (value: unknown): boolean =>
@@ -52,6 +55,19 @@ export function assertIsQRConfirmSuccess(
   if (!isQRConfirmSuccess(value))
     throw new TypeError(`value must be QRConfirmSuccess but received ${value}`);
 }
+export const isQRFailReason = (arg_0: unknown): arg_0 is QRFailReason =>
+  isUnion([
+    (arg_1: unknown): boolean => arg_1 === -1,
+    (arg_1: unknown): boolean => arg_1 === -2,
+    (arg_1: unknown): boolean => arg_1 === -4,
+    (arg_1: unknown): boolean => arg_1 === -5,
+  ])(arg_0);
+export function assertIsQRFailReason(
+  value: unknown
+): asserts value is QRFailReason {
+  if (!isQRFailReason(value))
+    throw new TypeError(`value must be QRFailReason but received ${value}`);
+}
 export const isQRConfirmFail = (arg_0: unknown): arg_0 is QRConfirmFail =>
   isObject(arg_0) &&
   'message' in arg_0 &&
@@ -69,19 +85,6 @@ export function assertIsQRConfirmFail(
 ): asserts value is QRConfirmFail {
   if (!isQRConfirmFail(value))
     throw new TypeError(`value must be QRConfirmFail but received ${value}`);
-}
-export const isQRFailReason = (arg_0: unknown): arg_0 is QRFailReason =>
-  isUnion([
-    (arg_1: unknown): boolean => arg_1 === -1,
-    (arg_1: unknown): boolean => arg_1 === -2,
-    (arg_1: unknown): boolean => arg_1 === -4,
-    (arg_1: unknown): boolean => arg_1 === -5,
-  ])(arg_0);
-export function assertIsQRFailReason(
-  value: unknown
-): asserts value is QRFailReason {
-  if (!isQRFailReason(value))
-    throw new TypeError(`value must be QRFailReason but received ${value}`);
 }
 export const isQRCodeResponseData = (
   arg_0: unknown
@@ -118,4 +121,40 @@ export function assertIsQRCodeResponse(
 ): asserts value is QRCodeResponse {
   if (!isQRCodeResponse(value))
     throw new TypeError(`value must be QRCodeResponse but received ${value}`);
+}
+export const isUserCookiesFromQuery = (
+  arg_0: unknown
+): arg_0 is UserCookiesFromQuery =>
+  isObject(arg_0) &&
+  'DedeUserID' in arg_0 &&
+  isString(arg_0.DedeUserID) &&
+  'DedeUserID__ckMd5' in arg_0 &&
+  isString(arg_0.DedeUserID__ckMd5) &&
+  'Expires' in arg_0 &&
+  isString(arg_0.Expires) &&
+  'bili_jct' in arg_0 &&
+  isString(arg_0.bili_jct);
+export function assertIsUserCookiesFromQuery(
+  value: unknown
+): asserts value is UserCookiesFromQuery {
+  if (!isUserCookiesFromQuery(value))
+    throw new TypeError(
+      `value must be UserCookiesFromQuery but received ${value}`
+    );
+}
+export const isUserCookies = (arg_0: unknown): arg_0 is UserCookies =>
+  isObject(arg_0) &&
+  'DedeUserID' in arg_0 &&
+  isNumber(arg_0.DedeUserID) &&
+  'DedeUserID__ckMd5' in arg_0 &&
+  isString(arg_0.DedeUserID__ckMd5) &&
+  'Expires' in arg_0 &&
+  isDate(arg_0.Expires) &&
+  'bili_jct' in arg_0 &&
+  isString(arg_0.bili_jct);
+export function assertIsUserCookies(
+  value: unknown
+): asserts value is UserCookies {
+  if (!isUserCookies(value))
+    throw new TypeError(`value must be UserCookies but received ${value}`);
 }

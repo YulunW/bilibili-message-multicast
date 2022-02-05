@@ -8,6 +8,6 @@ export type UserCookiesFromQuery = {
 export type UserCookies = {
   DedeUserID: number;
   DedeUserID__ckMd5: string;
-  Expires: Date;
+  Expires: number;
   bili_jct: string;
 };
