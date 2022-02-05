@@ -8,6 +8,9 @@ contextBridge.exposeInMainWorld('electron', {
     set(property, val) {
       ipcRenderer.send('electron-store-set', property, val);
     },
+    delete(val) {
+      ipcRenderer.send('electron-store-delete', val);
+    },
   },
   ipcRenderer: {
     myPing() {
