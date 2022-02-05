@@ -77,7 +77,7 @@ export default function App() {
       <MemoryRouter>
         <Box sx={{ display: 'flex' }}>
           <CssBaseline />
-          <SideBar />
+          <SideBar drawerWidth={240} />
           <Box component="main" sx={{ flexGrow: 1 }}>
             <Routes>
               <Route path="/" element={<Content2 />} />

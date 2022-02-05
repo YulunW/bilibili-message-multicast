@@ -16,8 +16,6 @@ import {
 } from 'react-router-dom';
 import LoginModal from './login_modal';
 
-const drawerWidth = 240;
-
 interface ListItemLinkProps {
   icon?: React.ReactElement;
   primary: string;
@@ -55,7 +53,12 @@ ListItemLink.defaultProps = {
   icon: null,
 };
 
-export default function SideBar() {
+interface SideBarProps {
+  drawerWidth: number;
+}
+
+export default function SideBar(props: SideBarProps) {
+  const { drawerWidth } = props;
   const [isOpen, setOpen] = React.useState(false);
   return (
     <Box
