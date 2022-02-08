@@ -11,7 +11,7 @@
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import path from 'path';
-import { app, BrowserWindow, shell, ipcMain } from 'electron';
+import { app, BrowserWindow, shell, ipcMain, session } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
 import Store from 'electron-store';
@@ -20,7 +20,6 @@ import MenuBuilder from './menu';
 import { resolveHtmlPath } from './util';
 
 const store = new Store();
-
 export default class AppUpdater {
   constructor() {
     log.transports.file.level = 'info';
@@ -37,6 +36,9 @@ ipcMain.on('ipc-example', async (event, arg) => {
   event.reply('ipc-example', msgTemplate('pong'));
 });
 
+ipcMain.on('electron-cookies-get', async (event) => {
+  event.returnValue = await session.defaultSession.cookies.get({});
+});
 ipcMain.on('electron-store-get', async (event, val) => {
   event.returnValue = store.get(val);
 });

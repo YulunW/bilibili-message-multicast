@@ -1,3 +1,5 @@
+import { Cookie } from 'electron';
+
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
@@ -96,6 +98,9 @@ export default function App() {
 declare global {
   interface Window {
     electron: {
+      cookies: {
+        get: () => Cookie[];
+      };
       store: {
         get: (key: string) => any;
         set: (key: string, val: any) => void;

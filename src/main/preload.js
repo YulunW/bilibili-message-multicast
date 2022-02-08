@@ -1,6 +1,11 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electron', {
+  cookies: {
+    get() {
+      return ipcRenderer.sendSync('electron-cookies-get');
+    },
+  },
   store: {
     get(val) {
       return ipcRenderer.sendSync('electron-store-get', val);
