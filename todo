@@ -1,0 +1,2 @@
+1. Reorganize files so there will not have circular dependencies.
+2. Fault tolerance
