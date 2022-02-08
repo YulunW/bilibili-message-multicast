@@ -99,11 +99,14 @@ const createWindow = async () => {
   });
 
   mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
-    { urls: ['*://*.bilibili.com/*'] },
+    { urls: ['*://*/*'] },
     (details, callback) => {
-      const { requestHeaders } = details;
-      deleteKey(requestHeaders, 'Origin');
-      deleteKey(requestHeaders, 'Referer');
+      const { requestHeaders, url } = details;
+      // Delete origin and referer headers except the destination is localhost
+      if (!url.includes('localhost')) {
+        deleteKey(requestHeaders, 'Origin');
+        deleteKey(requestHeaders, 'Referer');
+      }
       callback({ requestHeaders });
     }
   );
