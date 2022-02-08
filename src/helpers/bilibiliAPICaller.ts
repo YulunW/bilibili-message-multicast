@@ -1,9 +1,11 @@
 import produce from 'immer';
 import { QRConfirmFail, QRConfirmSuccess } from 'types/qrConfirm';
+import { UserBasicInfo, UserBasicInfoFetchFailed } from 'types/userInfo';
 import { deepFreeze } from './object';
 import { bilibiliAPI, USER_AGENT } from './constants';
 import {
   assertIsQRCodeResponse,
+  assertIsUserBasicInfoResponse,
   isQRConfirmFail,
   isQRConfirmSuccess,
 } from './typePredicates';
@@ -45,4 +47,14 @@ export const QRCodeLogin = async (
     throw new Error('Invalid type for QR Code Login');
   }
   return response;
+};
+
+export const fetchUserBasicInfo = async (): Promise<
+  UserBasicInfo | UserBasicInfoFetchFailed
+> => {
+  const response = await (
+    await fetch(bilibiliAPI.USER_BASIC_INFO, GET_OPTION)
+  ).json();
+  assertIsUserBasicInfoResponse(response);
+  return response.data;
 };

@@ -8,12 +8,15 @@ import { QRFailReason } from 'types/qrConfirm';
 import { UserCookies } from 'types/userInfo';
 // Circular dependency is needed to infer types. And since we are only importing types it shouldn't be a big problem
 /* eslint-disable-next-line import/no-cycle */
-import { CookiesToObj } from 'helpers/cookies';
+import { CookiesToObj } from 'helpers/userInfo';
 // Circular dependency is needed to infer types. And since we are only importing types it shouldn't be a big problem
 /* eslint-disable-next-line import/no-cycle */
 import { AppDispatch, RootState } from './store';
 import { QRCODE_EXPIRE_SECOND } from '../helpers/constants';
 import { getQRCode, QRCodeLogin } from '../helpers/bilibiliAPICaller';
+// Circular dependency is needed to infer types. And since we are only importing types it shouldn't be a big problem
+/* eslint-disable-next-line import/no-cycle */
+import { getUserInfos } from './userInfoSlice';
 
 export interface LoginInfoState {
   oauthKey: string;
@@ -71,6 +74,7 @@ export const checkQRCodeStat = async (
     const cookies = CookiesToObj();
     assertIsUserCookies(cookies);
     dispatch(setCookies(cookies));
+    dispatch(getUserInfos);
   } else {
     switch (result.data) {
       case QRFailReason.OauthKeyError:

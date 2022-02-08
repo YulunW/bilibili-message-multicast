@@ -1,6 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { setCookies } from 'state/loginInfoSlice';
-import { store } from 'state/store';
+import { AppDispatch, RootState, store } from 'state/store';
+import { getUserBasicInfo, getUserInfos } from 'state/userInfoSlice';
 import { isUserCookies } from './typePredicates';
 
 export function CookiesToObj(): Record<string, string> {
@@ -19,4 +20,9 @@ export function initCookies(): boolean {
     return true;
   }
   return false;
+}
+
+export function initUserInfo() {
+  if (!initCookies()) return;
+  store.dispatch(getUserInfos);
 }

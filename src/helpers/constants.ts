@@ -7,6 +7,7 @@ export const USER_AGENT =
 export const bilibiliAPI = {
   QRCODE_REQUEST: 'https://passport.bilibili.com/qrcode/getLoginUrl',
   QRCODE_FINAL_LOGIN: 'https://passport.bilibili.com/qrcode/getLoginInfo',
+  USER_BASIC_INFO: 'https://api.bilibili.com/x/web-interface/nav',
 };
 export const QRCODE_CONFIRM_SITE =
   'https://passport.bilibili.com/qrcode/h5/login';

@@ -5,7 +5,12 @@ import type {
   QRConfirmFail,
 } from '../types/qrConfirm';
 import type { QRCodeResponseData, QRCodeResponse } from '../types/qrResponse';
-import type { UserCookies } from '../types/userInfo';
+import type {
+  UserCookies,
+  UserBasicInfo,
+  UserBasicInfoFetchFailed,
+  UserBasicInfoResponse,
+} from '../types/userInfo';
 
 const isNumber = (value: unknown): value is number => typeof value === 'number';
 const isString = (value: unknown): value is string => typeof value === 'string';
@@ -134,4 +139,57 @@ export function assertIsUserCookies(
 ): asserts value is UserCookies {
   if (!isUserCookies(value))
     throw new TypeError(`value must be UserCookies but received ${value}`);
+}
+export const isUserBasicInfo = (arg_0: unknown): arg_0 is UserBasicInfo =>
+  isObject(arg_0) &&
+  'isLogin' in arg_0 &&
+  ((arg_1: unknown): boolean => arg_1 === true)(arg_0.isLogin) &&
+  'face' in arg_0 &&
+  isString(arg_0.face) &&
+  'mid' in arg_0 &&
+  isNumber(arg_0.mid) &&
+  'uname' in arg_0 &&
+  isString(arg_0.uname);
+export function assertIsUserBasicInfo(
+  value: unknown
+): asserts value is UserBasicInfo {
+  if (!isUserBasicInfo(value))
+    throw new TypeError(`value must be UserBasicInfo but received ${value}`);
+}
+export const isUserBasicInfoFetchFailed = (
+  arg_0: unknown
+): arg_0 is UserBasicInfoFetchFailed =>
+  isObject(arg_0) &&
+  'isLogin' in arg_0 &&
+  ((arg_1: unknown): boolean => arg_1 === false)(arg_0.isLogin);
+export function assertIsUserBasicInfoFetchFailed(
+  value: unknown
+): asserts value is UserBasicInfoFetchFailed {
+  if (!isUserBasicInfoFetchFailed(value))
+    throw new TypeError(
+      `value must be UserBasicInfoFetchFailed but received ${value}`
+    );
+}
+export const isUserBasicInfoResponse = (
+  arg_0: unknown
+): arg_0 is UserBasicInfoResponse =>
+  isObject(arg_0) &&
+  'code' in arg_0 &&
+  isNumber(arg_0.code) &&
+  'data' in arg_0 &&
+  ((arg_1: unknown): boolean =>
+    isUnion([isUserBasicInfo, isUserBasicInfoFetchFailed])(arg_1))(
+    arg_0.data
+  ) &&
+  'message' in arg_0 &&
+  isString(arg_0.message) &&
+  'ttl' in arg_0 &&
+  isNumber(arg_0.ttl);
+export function assertIsUserBasicInfoResponse(
+  value: unknown
+): asserts value is UserBasicInfoResponse {
+  if (!isUserBasicInfoResponse(value))
+    throw new TypeError(
+      `value must be UserBasicInfoResponse but received ${value}`
+    );
 }

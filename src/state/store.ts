@@ -1,11 +1,14 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 // Circular dependency is needed to infer types.
-/* eslint-disable-next-line import/no-cycle */
+/* eslint-disable import/no-cycle */
+
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import loginInfoReducer from './loginInfoSlice';
+import userInfoReducer from './userInfoSlice';
 
 export const store = configureStore({
   reducer: {
     loginInfo: loginInfoReducer,
+    userInfo: userInfoReducer,
   },
 });
 
