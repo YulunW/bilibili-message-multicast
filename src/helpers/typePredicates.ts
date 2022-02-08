@@ -1,17 +1,14 @@
 import type { LoginStatus } from '../types/loginStatus';
 import type {
   QRConfirmSuccess,
-  QRConfirmFail,
   QRFailReason,
+  QRConfirmFail,
 } from '../types/qrConfirm';
 import type { QRCodeResponseData, QRCodeResponse } from '../types/qrResponse';
-import type { UserCookiesFromQuery, UserCookies } from '../types/userInfo';
+import type { UserCookies } from '../types/userInfo';
 
 const isNumber = (value: unknown): value is number => typeof value === 'number';
 const isString = (value: unknown): value is string => typeof value === 'string';
-const isDate = (value: unknown): value is Date =>
-  value instanceof Date ||
-  Object.prototype.toString.call(value) === '[Object Date]';
 const isUnion =
   (unionChecks: ((value: unknown) => boolean)[]) =>
   (value: unknown): boolean =>
@@ -122,34 +119,14 @@ export function assertIsQRCodeResponse(
   if (!isQRCodeResponse(value))
     throw new TypeError(`value must be QRCodeResponse but received ${value}`);
 }
-export const isUserCookiesFromQuery = (
-  arg_0: unknown
-): arg_0 is UserCookiesFromQuery =>
+export const isUserCookies = (arg_0: unknown): arg_0 is UserCookies =>
   isObject(arg_0) &&
   'DedeUserID' in arg_0 &&
   isString(arg_0.DedeUserID) &&
   'DedeUserID__ckMd5' in arg_0 &&
   isString(arg_0.DedeUserID__ckMd5) &&
-  'Expires' in arg_0 &&
-  isString(arg_0.Expires) &&
-  'bili_jct' in arg_0 &&
-  isString(arg_0.bili_jct);
-export function assertIsUserCookiesFromQuery(
-  value: unknown
-): asserts value is UserCookiesFromQuery {
-  if (!isUserCookiesFromQuery(value))
-    throw new TypeError(
-      `value must be UserCookiesFromQuery but received ${value}`
-    );
-}
-export const isUserCookies = (arg_0: unknown): arg_0 is UserCookies =>
-  isObject(arg_0) &&
-  'DedeUserID' in arg_0 &&
-  isNumber(arg_0.DedeUserID) &&
-  'DedeUserID__ckMd5' in arg_0 &&
-  isString(arg_0.DedeUserID__ckMd5) &&
-  'Expires' in arg_0 &&
-  isDate(arg_0.Expires) &&
+  'SESSDATA' in arg_0 &&
+  isString(arg_0.SESSDATA) &&
   'bili_jct' in arg_0 &&
   isString(arg_0.bili_jct);
 export function assertIsUserCookies(

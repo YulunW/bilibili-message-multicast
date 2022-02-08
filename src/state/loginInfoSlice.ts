@@ -1,24 +1,19 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LoginStatus } from 'types/loginStatus';
 import {
-  assertIsUserCookiesFromQuery,
+  assertIsUserCookies,
   isQRConfirmSuccess,
 } from 'helpers/typePredicates';
 import { QRFailReason } from 'types/qrConfirm';
 import { UserCookies } from 'types/userInfo';
 // Circular dependency is needed to infer types. And since we are only importing types it shouldn't be a big problem
 /* eslint-disable-next-line import/no-cycle */
-import { COOKIE_PERSIST_KEY, persistKey } from 'helpers/permanentStorage';
-import { getParamsToObj } from 'helpers/object';
+import { CookiesToObj } from 'helpers/cookies';
 // Circular dependency is needed to infer types. And since we are only importing types it shouldn't be a big problem
 /* eslint-disable-next-line import/no-cycle */
 import { AppDispatch, RootState } from './store';
 import { QRCODE_EXPIRE_SECOND } from '../helpers/constants';
-import {
-  convertCookie,
-  getQRCode,
-  QRCodeLogin,
-} from '../helpers/bilibiliAPICaller';
+import { getQRCode, QRCodeLogin } from '../helpers/bilibiliAPICaller';
 
 export interface LoginInfoState {
   oauthKey: string;
@@ -54,14 +49,8 @@ export const loginInfoSlice = createSlice({
       state.trackQRStat = action.payload;
     },
     setCookies: (state, action: PayloadAction<UserCookies>) => {
-      let result: UserCookies | undefined = action.payload;
-      if (action.payload.Expires < new Date().getTime()) {
-        result = undefined;
-      } else {
-        state.status = LoginStatus.LOGGED_IN;
-      }
-      state.cookies = result;
-      persistKey(COOKIE_PERSIST_KEY, result);
+      state.status = LoginStatus.LOGGED_IN;
+      state.cookies = action.payload;
     },
   },
 });
@@ -79,9 +68,9 @@ export const checkQRCodeStat = async (
   }
   const result = await QRCodeLogin(oauthKey);
   if (isQRConfirmSuccess(result)) {
-    const cookies = getParamsToObj(result.data.url);
-    assertIsUserCookiesFromQuery(cookies);
-    dispatch(setCookies(convertCookie(cookies)));
+    const cookies = CookiesToObj();
+    assertIsUserCookies(cookies);
+    dispatch(setCookies(cookies));
   } else {
     switch (result.data) {
       case QRFailReason.OauthKeyError:

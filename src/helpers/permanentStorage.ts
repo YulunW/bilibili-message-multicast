@@ -1,7 +1,6 @@
 /* eslint-disable import/no-cycle */
 
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
-import { setCookies } from 'state/loginInfoSlice';
 
 import { store } from 'state/store';
 
@@ -12,12 +11,7 @@ type KeyToAction = {
   action: ActionCreatorWithPayload<any, string>;
 };
 
-const actionArray: Array<KeyToAction> = [
-  {
-    key: COOKIE_PERSIST_KEY,
-    action: setCookies,
-  },
-];
+const actionArray: Array<KeyToAction> = [];
 
 export const initStates = () => {
   actionArray.forEach((kToA) => {
