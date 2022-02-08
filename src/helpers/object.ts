@@ -27,5 +27,3 @@ export function getParamsToObj(url: string): Record<string, string> {
   });
   return params;
 }
-
-export const dummy = 1234;

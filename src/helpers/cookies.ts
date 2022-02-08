@@ -12,9 +12,11 @@ export function CookiesToObj(): Record<string, string> {
   return params;
 }
 
-export function initCookies() {
+export function initCookies(): boolean {
   const cookies = CookiesToObj();
   if (isUserCookies(cookies)) {
     store.dispatch(setCookies(cookies));
+    return true;
   }
+  return false;
 }
