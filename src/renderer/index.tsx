@@ -1,6 +1,6 @@
 import { render } from 'react-dom';
 import { initStates } from 'helpers/permanentStorage';
-import { initCookies, initUserInfo } from 'helpers/userInfo';
+import { initUserInfo } from 'helpers/userInfo';
 import App from './App';
 
 // Import the font files required by Material-UI

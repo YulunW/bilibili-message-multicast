@@ -1,4 +1,7 @@
-export function deepFreeze(object: Record<string, any>) {
+const isObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === 'object' && value !== null && !Array.isArray(value);
+
+export function deepFreeze(object: Record<string, unknown>) {
   // Retrieve the property names defined on object
   const propNames = Object.getOwnPropertyNames(object);
 
@@ -11,7 +14,7 @@ export function deepFreeze(object: Record<string, any>) {
   for (const name of propNames) {
     const value = object[name];
 
-    if (value && typeof value === 'object') {
+    if (value && isObject(value)) {
       deepFreeze(value);
     }
   }

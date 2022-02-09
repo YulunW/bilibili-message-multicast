@@ -8,7 +8,7 @@ export const COOKIE_PERSIST_KEY = 'cookie';
 
 type KeyToAction = {
   key: string;
-  action: ActionCreatorWithPayload<any, string>;
+  action: ActionCreatorWithPayload<unknown, string>;
 };
 
 const actionArray: Array<KeyToAction> = [];
@@ -22,7 +22,7 @@ export const initStates = () => {
   });
 };
 
-export const persistKey = (key: string, value: any) => {
+export const persistKey = (key: string, value: unknown) => {
   if (value !== undefined) {
     window.electron.store.set(key, value);
   } else {

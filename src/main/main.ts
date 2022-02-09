@@ -42,10 +42,10 @@ ipcMain.on('electron-cookies-get', async (event) => {
 ipcMain.on('electron-store-get', async (event, val) => {
   event.returnValue = store.get(val);
 });
-ipcMain.on('electron-store-set', async (event, key, val) => {
+ipcMain.on('electron-store-set', async (_event, key, val) => {
   store.set(key, val);
 });
-ipcMain.on('electron-store-delete', async (event, key) => {
+ipcMain.on('electron-store-delete', async (_event, key) => {
   store.delete(key);
 });
 

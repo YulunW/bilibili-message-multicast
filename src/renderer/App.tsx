@@ -78,8 +78,8 @@ declare global {
         get: () => Cookie[];
       };
       store: {
-        get: (key: string) => any;
-        set: (key: string, val: any) => void;
+        get: (key: string) => unknown;
+        set: (key: string, val: unknown) => void;
         delete: (key: string) => void;
         // any other methods you've defined...
       };

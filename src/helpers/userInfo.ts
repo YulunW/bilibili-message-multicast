@@ -1,7 +1,7 @@
 /* eslint-disable import/no-cycle */
 import { setCookies } from 'state/loginInfoSlice';
-import { AppDispatch, RootState, store } from 'state/store';
-import { getUserBasicInfo, getUserInfos } from 'state/userInfoSlice';
+import { store } from 'state/store';
+import { getUserInfos } from 'state/userInfoSlice';
 import { isUserCookies } from './typePredicates';
 
 export function CookiesToObj(): Record<string, string> {

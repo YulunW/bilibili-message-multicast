@@ -3,7 +3,7 @@ import { fetchUserBasicInfo } from 'helpers/bilibiliAPICaller';
 import { UserBasicInfo } from 'types/userInfo';
 // Circular dependency is needed to infer types. And since we are only importing types it shouldn't be a big problem
 /* eslint-disable-next-line import/no-cycle */
-import { AppDispatch, RootState } from './store';
+import { AppDispatch } from './store';
 
 export interface UserInfoState {
   userBasicInfo?: UserBasicInfo;
@@ -25,10 +25,7 @@ export const userInfoSlice = createSlice({
 
 export const { setUserInfo } = userInfoSlice.actions;
 
-export const getUserBasicInfo = async (
-  dispatch: AppDispatch,
-  getState: () => RootState
-) => {
+export const getUserBasicInfo = async (dispatch: AppDispatch) => {
   const result = await fetchUserBasicInfo();
   if (!result.isLogin) {
     return;
@@ -36,10 +33,7 @@ export const getUserBasicInfo = async (
   dispatch(setUserInfo(result));
 };
 
-export const getUserInfos = async (
-  dispatch: AppDispatch,
-  getState: () => RootState
-) => {
+export const getUserInfos = async (dispatch: AppDispatch) => {
   dispatch(getUserBasicInfo);
 };
 
