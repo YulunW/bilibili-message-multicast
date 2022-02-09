@@ -5,6 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import { Route, Routes, MemoryRouter, useLocation } from 'react-router-dom';
 import { Provider } from 'react-redux';
+import ContactList from 'components/contact_list';
 import { store } from '../state/store';
 
 import SideBar from '../components/sidebar';
@@ -48,31 +49,6 @@ function Content() {
   );
 }
 
-function Content2() {
-  const location = useLocation();
-  return (
-    <>
-      <Typography variant="body2" sx={{ pb: 2 }} color="text.secondary">
-        Current route: {location.pathname}
-      </Typography>
-      <Typography paragraph>
-        Consequat mauris nunc congue nisi vitae suscipit. Fringilla est
-        ullamcorper eget nulla facilisi etiam dignissim diam. Pulvinar elementum
-        integer enim neque volutpat ac tincidunt. Ornare suspendisse sed nisi
-        lacus sed viverra tellus. Purus sit amet volutpat consequat mauris.
-        Elementum eu facilisis sed odio morbi. Euismod lacinia at quis risus sed
-        vulputate odio. Morbi tincidunt ornare massa eget egestas purus viverra
-        accumsan in. In hendrerit gravida rutrum quisque non tellus orci ac.
-        Pellentesque nec nam aliquam sem et tortor. Habitant morbi tristique
-        senectus et. Adipiscing elit duis tristique sollicitudin nibh sit.
-        Ornare aenean euismod elementum nisi quis eleifend. Commodo viverra
-        maecenas accumsan lacus vel facilisis. Nulla posuere sollicitudin
-        aliquam ultrices sagittis orci a.
-      </Typography>
-    </>
-  );
-}
-
 export default function App() {
   return (
     <Provider store={store}>
@@ -82,9 +58,9 @@ export default function App() {
           <SideBar drawerWidth={240} />
           <Box component="main" sx={{ flexGrow: 1 }}>
             <Routes>
-              <Route path="/" element={<Content2 />} />
-              <Route path="/index.html" element={<Content2 />} />
-              <Route path="/inbox" element={<Content2 />} />
+              <Route path="/" element={<ContactList />} />
+              <Route path="/index.html" element={<ContactList />} />
+              <Route path="/inbox" element={<ContactList />} />
               <Route path="/drafts" element={<Content />} />
               <Route path="*" element={<Content />} />
             </Routes>
