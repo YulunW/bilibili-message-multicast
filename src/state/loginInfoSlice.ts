@@ -12,7 +12,10 @@ import { CookiesToObj } from 'helpers/userInfo';
 // Circular dependency is needed to infer types. And since we are only importing types it shouldn't be a big problem
 /* eslint-disable-next-line import/no-cycle */
 import { AppDispatch, RootState } from './store';
-import { QRCODE_EXPIRE_SECOND } from '../helpers/constants';
+import {
+  QRCODE_EXPIRE_SECOND,
+  QRCODE_LOGIN_ATTEMPT_INTERVAL,
+} from '../helpers/constants';
 import { getQRCode, QRCodeLogin } from '../helpers/bilibiliAPICaller';
 // Circular dependency is needed to infer types. And since we are only importing types it shouldn't be a big problem
 /* eslint-disable-next-line import/no-cycle */
@@ -82,13 +85,17 @@ export const checkQRCodeStat = async (
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
         dispatch(retrieveQRCode);
         break;
+      // Redundant code as fallthrough not permitted.
       case QRFailReason.NotConfirmed:
         dispatch(setStatus(LoginStatus.WAITING_CONFIRM));
-      // eslint-disable-next-line no-fallthrough
+        setTimeout(() => {
+          dispatch(checkQRCodeStat);
+        }, QRCODE_LOGIN_ATTEMPT_INTERVAL);
+        break;
       case QRFailReason.NotScanned:
         setTimeout(() => {
           dispatch(checkQRCodeStat);
-        }, 15000);
+        }, QRCODE_LOGIN_ATTEMPT_INTERVAL);
         break;
       default:
         throw new Error('unexpected result data type');

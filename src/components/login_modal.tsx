@@ -9,7 +9,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 import { retrieveQRCode, setTrack } from '../state/loginInfoSlice';
-import { QRCODE_CONFIRM_SITE } from '../helpers/constants';
+import { bilibiliAPI } from '../helpers/constants';
 
 import { LoginStatus } from '../types/loginStatus';
 
@@ -23,6 +23,8 @@ export default function LoginModal(props: LoginProps) {
   const expireTime = useAppSelector((state) => state.loginInfo.expireTime);
   const oauthKey = useAppSelector((state) => state.loginInfo.oauthKey);
   const dispatch = useAppDispatch();
+
+  const { QRCODE_CONFIRM_SITE } = bilibiliAPI;
 
   if (!isOpen) return <div />;
   if (status === LoginStatus.LOGGED_IN) {
