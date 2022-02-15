@@ -18,7 +18,7 @@
     "start:renderer": "cross-env NODE_ENV=development TS_NODE_TRANSPILE_ONLY=true webpack serve --config ./.erb/configs/webpack.config.renderer.dev.ts",
     "test": "jest",
     "prepare": "husky install",
-    "generate:types": "\"npx type-predicates-generator -a -f 'src/types/*.ts' -o src/helpers/typePredicates.ts\""
+    "generate:types": "ts-auto-guard --import-guards=\"Guards\" --export-all src/types/*.ts"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -220,6 +220,7 @@
     "sass-loader": "^12.4.0",
     "style-loader": "^3.3.1",
     "terser-webpack-plugin": "^5.3.0",
+    "ts-auto-guard": "^2.2.1",
     "ts-jest": "^27.1.2",
     "ts-loader": "^9.2.6",
     "ts-node": "^10.4.0",
