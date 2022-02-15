@@ -3,15 +3,25 @@
 import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
 
 import { store } from 'state/store';
+import { setTemplates } from 'state/templateSlice';
 
 export const COOKIE_PERSIST_KEY = 'cookie';
+export const TEMPLATES_PERSIST_KEY = 'templates';
 
 type KeyToAction = {
   key: string;
-  action: ActionCreatorWithPayload<unknown, string>;
+  // We need to specify any type of payload so by definition any is required.
+  // TODO: find out if there is a better way to specify type.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  action: ActionCreatorWithPayload<any, string>;
 };
 
-const actionArray: Array<KeyToAction> = [];
+const actionArray: Array<KeyToAction> = [
+  {
+    key: TEMPLATES_PERSIST_KEY,
+    action: setTemplates,
+  },
+];
 
 export const initStates = () => {
   actionArray.forEach((kToA) => {

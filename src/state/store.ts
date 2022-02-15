@@ -4,11 +4,13 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import loginInfoReducer from './loginInfoSlice';
 import userInfoReducer from './userInfoSlice';
+import templateReducer from './templateSlice';
 
 export const store = configureStore({
   reducer: {
     loginInfo: loginInfoReducer,
     userInfo: userInfoReducer,
+    templates: templateReducer,
   },
 });
 
