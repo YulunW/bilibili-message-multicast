@@ -1,14 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { LoginStatus } from 'types/loginStatus';
-import {
-  assertIsUserCookies,
-  isQRConfirmSuccess,
-} from 'helpers/typePredicates';
 import { QRFailReason } from 'types/qrConfirm';
 import { UserCookies } from 'types/userInfo';
 // Circular dependency is needed to infer types. And since we are only importing types it shouldn't be a big problem
 /* eslint-disable-next-line import/no-cycle */
 import { CookiesToObj } from 'helpers/userInfo';
+import { isQRConfirmSuccess } from 'types/qrConfirm.guard';
+import { isUserCookies } from 'types/userInfo.guard';
 // Circular dependency is needed to infer types. And since we are only importing types it shouldn't be a big problem
 /* eslint-disable-next-line import/no-cycle */
 import { AppDispatch, RootState } from './store';
@@ -75,7 +73,8 @@ export const checkQRCodeStat = async (
   const result = await QRCodeLogin(oauthKey);
   if (isQRConfirmSuccess(result)) {
     const cookies = CookiesToObj();
-    assertIsUserCookies(cookies);
+    if (!isUserCookies(cookies))
+      throw new Error('Did not recieve proper cookies');
     dispatch(setCookies(cookies));
     dispatch(getUserInfos);
   } else {

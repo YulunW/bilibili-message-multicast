@@ -1,14 +1,11 @@
 import produce from 'immer';
 import { QRConfirmFail, QRConfirmSuccess } from 'types/qrConfirm';
 import { UserBasicInfo, UserBasicInfoFetchFailed } from 'types/userInfo';
+import { isQRCodeResponse } from 'types/qrResponse.guard';
+import { isQRConfirmFail, isQRConfirmSuccess } from 'types/qrConfirm.guard';
+import { isUserBasicInfoResponse } from 'types/userInfo.guard';
 import { deepFreeze } from './object';
 import { bilibiliAPI, USER_AGENT } from './constants';
-import {
-  assertIsQRCodeResponse,
-  assertIsUserBasicInfoResponse,
-  isQRConfirmFail,
-  isQRConfirmSuccess,
-} from './typePredicates';
 
 const GET_OPTION: Readonly<RequestInit> = deepFreeze({
   credentials: 'include',
@@ -28,7 +25,8 @@ export const getQRCode = async (): Promise<string> => {
   const response = await (
     await fetch(bilibiliAPI.QRCODE_REQUEST, GET_OPTION)
   ).json();
-  assertIsQRCodeResponse(response);
+  if (!isQRCodeResponse(response))
+    throw new Error('incorrect format for QRCode Response');
   return response.data.oauthKey;
 };
 
@@ -55,6 +53,7 @@ export const fetchUserBasicInfo = async (): Promise<
   const response = await (
     await fetch(bilibiliAPI.USER_BASIC_INFO, GET_OPTION)
   ).json();
-  assertIsUserBasicInfoResponse(response);
+  if (!isUserBasicInfoResponse(response))
+    throw new Error('incorrect format for User Basic Info');
   return response.data;
 };

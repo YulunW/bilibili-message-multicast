@@ -2,7 +2,7 @@
 import { setCookies } from 'state/loginInfoSlice';
 import { store } from 'state/store';
 import { getUserInfos } from 'state/userInfoSlice';
-import { isUserCookies } from './typePredicates';
+import { isUserCookies } from 'types/userInfo.guard';
 
 export function CookiesToObj(): Record<string, string> {
   const cookies = window.electron.cookies.get();
