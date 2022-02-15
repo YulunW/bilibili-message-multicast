@@ -1,5 +1,4 @@
-const isObject = (value: unknown): value is Record<string, unknown> =>
-  typeof value === 'object' && value !== null && !Array.isArray(value);
+import { isObject } from './typeHelpers';
 
 export function deepFreeze(object: Record<string, unknown>) {
   // Retrieve the property names defined on object
