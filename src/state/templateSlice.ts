@@ -9,10 +9,12 @@ export interface TemplateState {
   templates: Record<TemplateName, TemplateContent>;
 }
 
+export const DEFAULT_TEMPLATE = Object.freeze({
+  默认模板: '',
+});
+
 const initialState: TemplateState = {
-  templates: {
-    默认模板: '',
-  },
+  templates: DEFAULT_TEMPLATE,
 };
 
 export const templateSlice = createSlice({
