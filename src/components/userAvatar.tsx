@@ -2,7 +2,7 @@ import { Avatar, Box, Button, Typography } from '@mui/material';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from 'state/hooks';
 import { setTrack } from 'state/loginInfoSlice';
-import LoginModal from './login_modal';
+import LoginModal from '../modals/login_modal';
 
 export default function UserAvatar() {
   const [isOpen, setOpen] = React.useState(false);
@@ -15,6 +15,7 @@ export default function UserAvatar() {
         variant="text"
         color="inherit"
         onClick={() => {
+          if (userBasicInfo?.isLogin) return;
           dispatch(setTrack(true));
           setOpen(true);
         }}

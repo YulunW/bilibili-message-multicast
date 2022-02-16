@@ -3,11 +3,6 @@ import React from 'react';
 import {
   Box,
   Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   Grid,
   MenuItem,
   Select,
@@ -20,7 +15,9 @@ import { RenderStatus, useLiquid } from 'hooks/useLiquid';
 import { ObjectInspector } from 'react-inspector';
 import { useAppDispatch, useAppSelector } from 'state/hooks';
 import produce from 'immer';
-import { DEFAULT_TEMPLATE, setTemplates } from 'state/templateSlice';
+import { setTemplates } from 'state/templateSlice';
+import TemplateDeleteModal from 'modals/template_delete_modal';
+import TemplateCreateModal from 'modals/template_create_modal';
 
 interface TabPanelProps {
   children: React.ReactNode;
@@ -53,7 +50,6 @@ export default function TemplateInput() {
   const [templateValue, setTemplateValue] = React.useState(
     templates[currentTemplate]
   );
-  const [newTemplateName, setNewTemplateName] = React.useState('');
   const [openDeleteModal, setOpenDeleteModal] = React.useState(false);
   const [openCreateModal, setOpenCreateModal] = React.useState(false);
 
@@ -73,23 +69,10 @@ export default function TemplateInput() {
     result = preempResult;
   }
 
-  const handleCloseDeleteModal = () => {
-    setOpenDeleteModal(false);
-  };
-
-  const handleCloseCreateModal = () => {
-    setOpenCreateModal(false);
-    setNewTemplateName('');
-  };
-
   const changeTemplate = (value: string) => {
     // TODO: Add warning when template value is edited but not saved
     setCurrentTemplate(value);
     setTemplateValue(templates[value]);
-  };
-
-  const templateNameExist = () => {
-    return newTemplateName in templates;
   };
 
   const saveTemplate = () => {
@@ -99,102 +82,19 @@ export default function TemplateInput() {
     dispatch(setTemplates(newTemplates));
   };
 
-  const createNewTemplate = () => {
-    if (newTemplateName in templates) return;
-    const newTemplates = produce(templates, (draftState) => {
-      draftState[newTemplateName] = '';
-    });
-    dispatch(setTemplates(newTemplates));
-    changeTemplate(newTemplateName);
-  };
-
-  const deleteTemplate = () => {
-    const newTemplates = produce(templates, (draftState) => {
-      delete draftState[currentTemplate];
-    });
-    dispatch(setTemplates(newTemplates));
-    if (Object.keys(newTemplates).length === 0) {
-      dispatch(setTemplates(DEFAULT_TEMPLATE));
-      changeTemplate(Object.keys(DEFAULT_TEMPLATE)[0]);
-    } else {
-      changeTemplate(Object.keys(newTemplates)[0]);
-    }
-  };
-
   return (
     <Box sx={{ p: 2 }}>
-      <Dialog
-        open={openDeleteModal}
-        onClose={handleCloseDeleteModal}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">{`确定删除 ${currentTemplate} 吗？`}</DialogTitle>
-        <DialogContent>
-          <DialogContentText id="alert-dialog-description">
-            模板删除后将无法恢复
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleCloseDeleteModal}>
-            取消
-          </Button>
-          <Button
-            variant="outlined"
-            color="error"
-            onClick={() => {
-              deleteTemplate();
-              handleCloseDeleteModal();
-            }}
-            autoFocus
-          >
-            确定
-          </Button>
-        </DialogActions>
-      </Dialog>
-      <Dialog
-        open={openCreateModal}
-        onClose={handleCloseCreateModal}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-      >
-        <DialogTitle id="alert-dialog-title">创建模板</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            请输入模板名。模板名不能与已有模板相同。
-          </DialogContentText>
-          <TextField
-            autoFocus
-            margin="dense"
-            error={templateNameExist()}
-            helperText={templateNameExist() ? '已存在该模板' : ''}
-            value={newTemplateName}
-            onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-              setNewTemplateName(event.target.value);
-            }}
-            id="name"
-            label="模板名"
-            fullWidth
-            variant="standard"
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button variant="outlined" onClick={handleCloseCreateModal}>
-            取消
-          </Button>
-          <Button
-            variant="outlined"
-            disabled={templateNameExist()}
-            onClick={() => {
-              createNewTemplate();
-              handleCloseCreateModal();
-            }}
-            autoFocus
-          >
-            确定
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <TemplateDeleteModal
+        isOpen={openDeleteModal}
+        setOpen={setOpenDeleteModal}
+        templateToDelete={currentTemplate}
+        changeTemplate={changeTemplate}
+      />
+      <TemplateCreateModal
+        isOpen={openCreateModal}
+        setOpen={setOpenCreateModal}
+        changeTemplate={changeTemplate}
+      />
       <Grid container spacing={2} sx={{ pb: 2 }}>
         <Grid
           item
